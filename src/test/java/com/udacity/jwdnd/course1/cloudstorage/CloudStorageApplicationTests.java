@@ -32,12 +32,17 @@ class CloudStorageApplicationTests {
 		this.driver = new FirefoxDriver();
 	}
 
-	@AfterEach
-	public void afterEach() {
-		if (this.driver != null) {
-			driver.quit();
-		}
-	}
+//	@AfterEach
+//	public void afterEach() {
+//		if (this.driver != null) {
+//			driver.quit();
+//		}
+//	}
+
+	private String firstname = "Bob";
+	private String lastname = "Grasshopper";
+	private String username = "Grasshopper";
+	private String password = "admin";
 
 	@Test
 	public void getLoginPage() {
@@ -198,6 +203,39 @@ class CloudStorageApplicationTests {
 			System.out.println("Large File upload failed");
 		}
 		Assertions.assertFalse(driver.getPageSource().contains("HTTP Status 403 – Forbidden"));
+
+	}
+
+	public void loginNewUser(){
+		doMockSignUp(firstname, lastname, username, password);
+		doLogIn(username, password);
+	}
+
+	@Test
+	public void testNewCredentials(){
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		loginNewUser();
+
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+		WebElement credentialsTab = driver.findElement(By.id("nav-credentials-tab"));
+		credentialsTab.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialsAdd")));
+		WebElement credentialAddButton = driver.findElement(By.id("credentialsAdd"));
+		credentialAddButton.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
+		WebElement credentialUrl = driver.findElement(By.id("credential-url"));
+		credentialUrl.click();
+		credentialUrl.sendKeys("https://ILoveCats.com");
+		WebElement credentialUsername = driver.findElement(By.id("credential-username"));
+		credentialUsername.click();
+		credentialUsername.sendKeys(username);
+		WebElement credentialPassword = driver.findElement(By.id("credential-password"));
+		credentialPassword.click();
+		credentialPassword.sendKeys(password);
+		credentialPassword.submit();
 
 	}
 

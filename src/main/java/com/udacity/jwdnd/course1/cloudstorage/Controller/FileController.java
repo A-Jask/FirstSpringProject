@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileController {
     private final FileService fileService;
     private final UserService userService;
-    private Exception ex;
 
     private Logger logger = LoggerFactory.getLogger(FileController.class);
 
@@ -41,6 +40,7 @@ public class FileController {
             model.addAttribute("isSuccess", true);
             model.addAttribute("successMsg", "Successfully deleted the file");
         }catch(Exception e) {
+            logger.error("Cause: " + e.getCause() + ". Message: " + e.getMessage());
             model.addAttribute("isError", true);
             model.addAttribute("errorMsg", "File couldn't be deleted");
         }
@@ -65,7 +65,7 @@ public class FileController {
         String err_msg = null;
 
         if (file.getBytes().length == 0) {
-            err_msg = "File is empty.";
+            err_msg = "No file selected.";
         }
 
         String filename = file.getOriginalFilename();
