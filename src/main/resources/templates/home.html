@@ -148,8 +148,8 @@
                                         <a th:href="@{/credentials/deleteCredendtials/{credentialId} (credentialId = ${credentials.credentialId})}" class="btn btn-danger" id="btn credentialsDelete">Delete</a>
                                     </td>
                                     <th scope="row" th:text="${credentials.getUrl()}">Example Credential URL</th>
-                                    <td th:text="${credentials.getUsername()}">Example Credential Username</td>
-                                    <td th:text="${credentials.getPassword()}">Example Credential Password</td>
+                                    <td id="credentialsUsernames" th:text="${credentials.getUsername()}">Example Credential Username</td>
+                                    <td id="credentialsPasswords" th:text="${credentials.getPassword()}">Example Credential Password</td>
                                 </tr>
                                 </tbody>
                             </table>
