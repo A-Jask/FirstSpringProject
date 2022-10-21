@@ -12,11 +12,11 @@
         <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
             <div th:if="${isSuccess}" class="alert alert-success fill-parent">
                 <h1 th:text="${successMsg}" class="display-5" id="success">Success</h1>
-                <span>Click <a th:href="@{/home}">here</a> to continue.</span>
+                <span>Click <a th:href="@{/home}" id="home">here</a> to continue.</span>
             </div>
             <div th:if="${isError}" class="alert alert-danger fill-parent">
                 <h1 th:text="${errorMsg}" class="display-5">Error</h1>
-                <span>Click <a th:href="@{/home}">here</a> to continue.</span>
+                <span>Click <a th:href="@{/home}" id="homeError">here</a> to continue.</span>
             </div>
 <!--            <div class="alert alert-danger fill-parent">-->
 <!--                <h1 class="display-5">Error</h1>-->

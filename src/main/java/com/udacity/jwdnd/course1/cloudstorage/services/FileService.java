@@ -25,6 +25,9 @@ public class FileService {
         return fileMapper.insert(new File(null, filename, fileType, fileSize, userId, file.getBytes()));
     }
 
+    public boolean isFilenameAvailable(String filename, Integer userId){
+        return this.fileMapper.getFilenameWithId(filename, userId) == null;
+    }
 
     public List<File> getAllFiles(Integer userId) {
         return fileMapper.getAllFiles(userId);

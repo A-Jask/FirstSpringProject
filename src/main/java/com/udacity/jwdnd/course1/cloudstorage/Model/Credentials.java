@@ -15,7 +15,7 @@ public class Credentials {
         this.password ="";
     }
 
-    public Credentials(Integer credentialId, String url, String username,String key, String password, Integer userid) {
+    public Credentials(Integer credentialId, String url, String username, String key, String password, Integer userid) {
         this.userid = userid;
         this.credentialId = credentialId;
         this.password = password;

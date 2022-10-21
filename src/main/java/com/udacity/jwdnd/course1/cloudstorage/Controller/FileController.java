@@ -1,8 +1,5 @@
 package com.udacity.jwdnd.course1.cloudstorage.Controller;
 
-import java.io.IOException;
-import java.util.List;
-
 import com.udacity.jwdnd.course1.cloudstorage.Model.File;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
@@ -18,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 
 @Controller
@@ -61,35 +60,37 @@ public class FileController {
     @PostMapping("/new_file")
     public String upload_file(Authentication auth, @RequestParam("fileUpload") MultipartFile file, Model model) throws IOException {
         Integer userId = userService.getUser(auth.getName()).getUserId();
-        List<File> file_List = fileService.getAllFiles(userId);
-        String err_msg = null;
 
         if (file.getBytes().length == 0) {
-            err_msg = "No file selected.";
+            model.addAttribute("isError", true);
+            model.addAttribute("errorMsg", "No file selected.");
+            return "result";
         }
 
-        String filename = file.getOriginalFilename();
-        for (File file_1: file_List){
-            if (file_1.getFileId().equals(filename)) {
-                err_msg = "File name \'" + filename + "\' already exists";
-                break;
-            }
+        if(!fileService.isFilenameAvailable(file.getOriginalFilename(), userId)){
+            model.addAttribute("isError", true);
+            model.addAttribute("errorMsg", "File with the same filename already exists");
+            return "result";
         }
 
-        if (err_msg == null) {
-            try {
+//        String filename = file.getName();
+//        for (File file_1: file_List){
+//            if (file_1.getFileId().equals(filename)) {
+//                err_msg = "File name \'" + filename + "\' already exists";
+//                break;
+//            }
+//        }
+
+        try {
                 fileService.storeFile(file, userId);
                 model.addAttribute("isSuccess", true);
                 model.addAttribute("successMsg", "File " + file.getOriginalFilename() + "  (Size: "+ file.getSize() + ")" + " has been uploaded");
+                return "result";
             }catch(Exception e) {
                 logger.error("Cause: " + e.getCause() + ". Message: " + e.getMessage());
                 model.addAttribute("isError", true);
                 model.addAttribute("errorMsg", "File couldn't be uploaded");
+                return "result";
             }
-        }else {
-            model.addAttribute("isError", true);
-            model.addAttribute("errorMsg", err_msg);
-        }
-        return "result";
     }
 }

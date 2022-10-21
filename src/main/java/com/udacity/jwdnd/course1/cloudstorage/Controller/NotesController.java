@@ -1,6 +1,5 @@
 package com.udacity.jwdnd.course1.cloudstorage.Controller;
 
-import com.udacity.jwdnd.course1.cloudstorage.Mapper.NotesMapper;
 import com.udacity.jwdnd.course1.cloudstorage.Model.Notes;
 import com.udacity.jwdnd.course1.cloudstorage.Model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.NotesService;
@@ -10,13 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 @Controller
+@RequestMapping("/notes")
 public class NotesController {
 
     private final NotesService notesService;
@@ -36,6 +33,7 @@ public class NotesController {
             model.addAttribute("isSuccess", true);
             model.addAttribute("successMsg", "Successfully deleted note");
         }catch(Exception e) {
+            logger.error("Cause: " + e.getCause() + ". Message: " + e.getMessage());
             model.addAttribute("isError", true);
             model.addAttribute("errorMsg", "Note couldn't be deleted");
         }
@@ -45,25 +43,35 @@ public class NotesController {
 
     @PostMapping("/add_note")
     public String add_or_update_note(Authentication auth, @ModelAttribute("Notes") Notes notes, Model model) {
-        String username = (String) auth.getPrincipal();
-        User user = userService.getUser(username);
-        String error_Msg = null;
+        System.out.println("Executing add/update Note");
+        User user = userService.getUser(auth.getPrincipal().toString());
+        notes.setUserid(user.getUserId());
 
-        if (notes.getNoteid() != null) {
-            notesService.editNote(notes.getNoteid(), notes.getNoteTitle(), notes.getNoteDescription());
-            model.addAttribute("isSuccess", true);
-            model.addAttribute("successMsg", "Note has been successfully updated");
-        }else {
+        if (notes.getNoteid() == null) {
             try {
-                notesService.createNote(new Notes(null, notes.getNoteTitle(), notes.getNoteDescription(), user.getUserId()));
+                System.out.println("Notes 1");
+                notesService.createNote(notes);
+                System.out.println("Notes 2");
+                // notesService.createNote(new Notes(null, notes.getNoteTitle(), notes.getNoteDescription(), user.getUserId()));
                 model.addAttribute("isSuccess", true);
                 model.addAttribute("successMsg", "Note has been successfully created");
             }catch(Exception e) {
+                logger.error("Cause: " + e.getCause() + ". Message: " + e.getMessage());
                 model.addAttribute("isError", true);
                 model.addAttribute("errorMsg", "Something went wrong when creating the note, please try again");
             }
+        }else{
+            try {
+                notesService.editNote(notes.getNoteid(), notes.getNoteTitle(), notes.getNoteDescription());
+                model.addAttribute("isSuccess", true);
+                model.addAttribute("successMsg", "Note has been successfully updated");
+            }catch(Exception e){
+                logger.error("Cause: " + e.getCause() + ". Message: " + e.getMessage());
+                model.addAttribute("isError", true);
+                model.addAttribute("errorMsg", "Something went wrong when updating the note, please try again");
+            }
         }
-        model.addAttribute("notes", notesService.getAllNote(user.getUserId()));
+        //model.addAttribute("notes", notesService.getAllNote(user.getUserId()));
 
         return "result";
     }
