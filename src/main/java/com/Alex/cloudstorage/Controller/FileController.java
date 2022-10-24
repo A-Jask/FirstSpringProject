@@ -73,14 +73,6 @@ public class FileController {
             return "result";
         }
 
-//        String filename = file.getName();
-//        for (File file_1: file_List){
-//            if (file_1.getFileId().equals(filename)) {
-//                err_msg = "File name \'" + filename + "\' already exists";
-//                break;
-//            }
-//        }
-
         try {
                 fileService.storeFile(file, userId);
                 model.addAttribute("isSuccess", true);

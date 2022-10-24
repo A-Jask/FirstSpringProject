@@ -21,22 +21,14 @@ public class CredentialService {
         this.hashService = hashService;
     }
 
-//    public void createCredentials(Credentials credentials){
-//        credentials.setKey(this.encryptionService.generateKey());
-//        credentials.setPassword(this.encryptPassword(credentials));
-//        this.credentialMapper.insert(credentials);
-//    }
-
     public int createCredentials(Credentials credentials){
         String password = credentials.getPassword();
         String encodedKey = generateKey();
         String hashedPassword = encryptionService.encryptValue(password, encodedKey);
         credentials.setKey(encodedKey);
-        System.out.println("key=" + encodedKey);
         credentials.setPassword(hashedPassword);
         return credentialMapper.insert(credentials);
     }
-
 
     private String generateKey() {
         SecureRandom random = new SecureRandom();
@@ -71,6 +63,5 @@ public class CredentialService {
     public Credentials getCredentialsByItsId(Integer credentialid){
         return credentialMapper.getCredentialById(credentialid);
     }
-
 
 }

@@ -30,12 +30,12 @@ class CloudStorageApplicationTests {
 		this.driver = new FirefoxDriver();
 	}
 
-//	@AfterEach
-//	public void afterEach() {
-//		if (this.driver != null) {
-//			driver.quit();
-//		}
-//	}
+	@AfterEach
+	public void afterEach() {
+		if (this.driver != null) {
+			driver.quit();
+		}
+	}
 
 	private String firstname = "Bob";
 	private String lastname = "Grasshopper";
@@ -244,7 +244,7 @@ class CloudStorageApplicationTests {
 	public void goNotesTab(){
 	WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
 	webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-notes-tab"))).click();
-}
+	}
 
 	public void newNote() {
 		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
@@ -333,8 +333,8 @@ class CloudStorageApplicationTests {
 		newCredentials();
 
 		Assertions.assertTrue(driver.getPageSource().contains(url));
-		Assertions.assertTrue(driver.getPageSource().contains(username));
-		Assertions.assertFalse(driver.getPageSource().contains(password));
+		Assertions.assertEquals(driver.findElement(By.id("credentialsUsernames")).getText(), username);
+		Assertions.assertNotEquals(driver.findElement(By.id("credentialsPasswords")).getText(), password);
 	}
 
 	@Test
@@ -375,6 +375,4 @@ class CloudStorageApplicationTests {
 		Assertions.assertFalse(driver.getPageSource().contains(url));
 
 	}
-
-
 }

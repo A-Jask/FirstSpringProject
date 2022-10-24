@@ -52,7 +52,6 @@ public class NotesController {
                 System.out.println("Notes 1");
                 notesService.createNote(notes);
                 System.out.println("Notes 2");
-                // notesService.createNote(new Notes(null, notes.getNoteTitle(), notes.getNoteDescription(), user.getUserId()));
                 model.addAttribute("isSuccess", true);
                 model.addAttribute("successMsg", "Note has been successfully created");
             }catch(Exception e) {
@@ -71,7 +70,6 @@ public class NotesController {
                 model.addAttribute("errorMsg", "Something went wrong when updating the note, please try again");
             }
         }
-        //model.addAttribute("notes", notesService.getAllNote(user.getUserId()));
 
         return "result";
     }
