@@ -49,9 +49,7 @@ public class NotesController {
 
         if (notes.getNoteid() == null) {
             try {
-                System.out.println("Notes 1");
                 notesService.createNote(notes);
-                System.out.println("Notes 2");
                 model.addAttribute("isSuccess", true);
                 model.addAttribute("successMsg", "Note has been successfully created");
             }catch(Exception e) {
